@@ -4,6 +4,8 @@ require "./constraint.cr"
 require "./variable.cr"
 require "./row.cr"
 require "./symbol.cr"
+require "./util.cr"
+require "./exceptions.cr"
 
 module Kiwi
   class Solver
@@ -34,8 +36,7 @@ module Kiwi
       row = create_row(constraint, tag)
       subject = choose_subject(row, tag)
 
-      if subject.type == Symbol.Type
-        ::INVALID && all_dummies(row)
+      if subject.type == Symbol::Type::INVALID && all_dummies(row)
         if !Util.near_zero(row.constant)
           raise UnsatisfiableConstraintException.new(constraint)
         else
@@ -43,8 +44,7 @@ module Kiwi
         end
       end
 
-      if subject.type == Symbol.Type
-        ::INVALID
+      if subject.type == Symbol::Type::INVALID
         if !add_with_artificial_variable(row)
           raise UnsatisfiableConstraintException.new(constraint)
         end
@@ -95,11 +95,9 @@ module Kiwi
     end
 
     def remove_constraint_effects(constraint : Constraint, tag : Tag)
-      if tag.marker.type == Symbol.Type
-        ::ERROR
+      if tag.marker.type == Symbol::Type::ERROR
         remove_marker_effects(tag.marker, constraint.strength)
-      elsif tag.other.type == Symbol.Type
-        ::ERROR
+      elsif tag.other.type == Symbol::Type::ERROR
         remove_marker_effects(tag.other, constraint.strength)
       end
     end
@@ -126,8 +124,7 @@ module Kiwi
         if c == 0
           next
         end
-        if s.type == Symbol.Type
-          ::EXTERNAL
+        if s.type == Symbol::Type::EXTERNAL
           third = candidate_row
         elsif c < 0
           r = -candidate_row.constant / c
