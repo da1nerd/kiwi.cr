@@ -25,7 +25,7 @@ module Kiwi
     end
 
     def insert(symbol : Symbol, coefficient : Float64)
-      if @cells.has_key symbol
+      if @cells.has_key? symbol
         coefficient += @cells[symbol]
       end
 
@@ -47,7 +47,7 @@ module Kiwi
         coeff = other.cells[symbol] * coefficient
         # TODO: the below lines could be made more efficient
         value = 0.0
-        if @cells.has_key symbol
+        if @cells.has_key? symbol
           value = @cells[symbol]
         end
         temp = value + coeff
@@ -90,7 +90,7 @@ module Kiwi
     end
 
     def coefficient_for(symbol : Symbol) : Float64
-      if @cells.has_key symbol
+      if @cells.has_key? symbol
         return @cells[symbol]
       else
         return 0.0
@@ -98,7 +98,7 @@ module Kiwi
     end
 
     def substitute(symbol : Symbol, row : Row)
-      if @cell.has_key symbol
+      if @cells.has_key? symbol
         coefficient = @cells[symbol]
         @cells.delete symbol
         insert(row, coefficient)

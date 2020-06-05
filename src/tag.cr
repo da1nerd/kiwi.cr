@@ -6,6 +6,8 @@ module Kiwi
       @marker : Symbol
       @other : Symbol
 
+      property marker, other
+
       def initialize
         @marker = Symbol.new
         @other = Symbol.new

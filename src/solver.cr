@@ -27,8 +27,8 @@ module Kiwi
     end
 
     @[Raises]
-    def add_constraint(constraint : Contstraint)
-      if @cns.has_key constraint
+    def add_constraint(constraint : Constraint)
+      if @cns.has_key? constraint
         raise DuplicateConstraintException.new(constraint)
       end
 
@@ -60,7 +60,7 @@ module Kiwi
 
     @[Raises]
     def remove_constraint(constraint : Constraint)
-      if !@cns.has_key(constraint)
+      if !@cns.has_key?(constraint)
         raise UnknownConstraintException.new(constraint)
       end
 
@@ -68,7 +68,7 @@ module Kiwi
       cns.delete constraint
       remove_constraint_effects(constraint, tag)
 
-      if @rows.has_key tag.marker
+      if @rows.has_key? tag.marker
         @rows.delete tag.marker
       else
         row = get_marker_leaving_row(tag.marker)
@@ -103,7 +103,7 @@ module Kiwi
     end
 
     def remove_marker_effects(marker : Symbol, strength : Float64)
-      if @rows.has_key marker
+      if @rows.has_key? marker
         @objective.insert(@rows[marker], -strength)
       else
         @objective.insert(marker, -strength)
@@ -151,12 +151,12 @@ module Kiwi
     end
 
     def has_constraint(constraint : Constraint) : Bool
-      @cns.has_key(constraint)
+      @cns.has_key?(constraint)
     end
 
     @[Raises]
     def add_edit_variable(variable : Variable, strength : Float64)
-      if @edits.has_key variable
+      if @edits.has_key? variable
         raise DuplicateEditVariableException.new
       end
 
@@ -181,7 +181,7 @@ module Kiwi
 
     @[Raises]
     def remove_edit_variable(variable : Variable)
-      if !@edits.has_key(variable)
+      if !@edits.has_key?(variable)
         raise UnknownEditVariableException.new
       end
 
@@ -195,19 +195,19 @@ module Kiwi
     end
 
     def has_edit_variable(variable : Variable) : Bool
-      @edits.has_key variable
+      @edits.has_key? variable
     end
 
     @[Raises]
     def suggest_value(variable : Variable, value : Float64)
-      if !@edits.has_key(variable)
+      if !@edits.has_key?(variable)
         raise UnknownEditVariableException.new
       end
       info = @edits[variable]
       delta = value - info.constant
       info.constant = value
 
-      if @rows.has_key(info.tag.marker)
+      if @rows.has_key?(info.tag.marker)
         if row.add(-delta) < 0
           @infeasible_rows << info.tag.marker
         end
@@ -215,7 +215,7 @@ module Kiwi
         return
       end
 
-      if @rows.has_key(info.tag.other)
+      if @rows.has_key?(info.tag.other)
         if row.add(delta) < 0
           @infeasible_rows << info.tag.other
         end
@@ -236,7 +236,7 @@ module Kiwi
 
     def update_variables
       @vars.each do |variable, symbol|
-        if !@rows.has_key(symbol)
+        if !@rows.has_key?(symbol)
           variable.value = 0
         else
           variable.value = @rows[symbol].constant
@@ -245,13 +245,13 @@ module Kiwi
     end
 
     def create_row(constraint : Constraint, tag : Tag) : Row
-      expression = constant.expression
+      expression = constraint.expression
       row = Row.new(expression.constant)
 
-      @expression.terms.each do |term|
+      expression.terms.each do |term|
         if !Util.near_zero(term.coefficient)
           symbol = get_var_symbol(term.variable)
-          if !@rows.has_key(symbol)
+          if !@rows.has_key?(symbol)
             row.insert(symbol, term.coefficient)
           else
             row.insert(@rows[symbol], term.coefficient)
@@ -308,7 +308,7 @@ module Kiwi
       end
       # Can other be nil?
       if tag.other && (tag.other.type == Symbol::Type::SLACK || tag.other.type == Symbol::Type::ERROR)
-        if row.coefficient_for(tag.other < 0)
+        if row.coefficient_for(tag.other) < 0
           return tag.other
         end
       end
@@ -322,11 +322,11 @@ module Kiwi
 
       @artificial = Row.new(row)
 
-      optimize(@artificial)
-      success = Util.near_zero(artificial.constant)
+      optimize(@artificial.as(Row))
+      success = Util.near_zero(@artificial.as(Row).constant)
       @artificial = nil
 
-      if @rows.has_key art
+      if @rows.has_key? art
         rowptr = @rows[art]
 
         @rows.each_key do |symbol|
@@ -401,9 +401,10 @@ module Kiwi
         end
 
         @rows.delete entry_key
-        entry.solve_for(leaving, entering)
-        substitute(entering, entry)
-        @rows[entering] = entry
+        # TODO: this is a quick hack. And will likely break
+        entry.as(Row).solve_for(leaving.as(Symbol), entering)
+        substitute(entering.as(Symbol), entry.as(Row))
+        @rows[entering.as(Symbol)] = entry.as(Row)
       end
     end
 
@@ -411,7 +412,7 @@ module Kiwi
     def dual_optimize
       while !@infeasible_rows.empty?
         leaving : Symbol = @infeasible_rows.pop
-        if @rows.has_key(leaving) && @rows[leaving].constant < 0
+        if @rows.has_key?(leaving) && @rows[leaving].constant < 0
           row = @rows[leaving]
           entering = get_dual_entering_symbol row
           if entering.type == Symbol::Type::INVALID
@@ -465,7 +466,7 @@ module Kiwi
 
     private def get_leaving_row(entering : Symbol) : Row | Nil
       ratio = Float64::MAX
-      row : Row | Nil
+      row : Row | Nil = nil
       @rows.each_key do |symbol|
         if symbol.type != Symbol::Type::EXTERNAL
           candidate_row = @rows[symbol]
@@ -482,8 +483,8 @@ module Kiwi
       return row
     end
 
-    private def get_var_symbol(varible : Variable) : Symbol
-      if @vars.has_key(variable)
+    private def get_var_symbol(variable : Variable) : Symbol
+      if @vars.has_key?(variable)
         return @vars[variable]
       else
         symbol = Symbol.new(Symbol::Type::EXTERNAL)

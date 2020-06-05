@@ -3,14 +3,14 @@ module Kiwi
     @name : String
     @value : Float64
 
-    property value
+    property value : Float64
     getter name
 
     def initialize(@name : String)
       @value = 0.0
     end
 
-    def initialize(@value)
+    def initialize(@value : Float64)
       @name = ""
     end
 

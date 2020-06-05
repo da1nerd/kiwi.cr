@@ -1,2 +1,2 @@
 require "spec"
-require "../src/kiwi-crystal"
+require "../src/kiwi"

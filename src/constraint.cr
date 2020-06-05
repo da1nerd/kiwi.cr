@@ -25,11 +25,11 @@ module Kiwi
       @strength = Strength.clip(strength)
     end
 
-    private def self.reduce(expression : Expression) : Expression
+    private def reduce(expression : Expression) : Expression
       vars = {} of Variable => Float64
       expression.terms.each do |term|
         value = 0.0
-        if vars.has_key term.variable
+        if vars.has_key? term.variable
           value = vars[term.variable]
         end
         value += term.coefficient
