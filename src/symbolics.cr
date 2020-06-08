@@ -28,6 +28,14 @@ module Kiwi
       greater_than_or_equal_to(Term.new(first), second)
     end
 
+    def greater_than_or_equal_to(variable : Variable, expression : Expression)
+      greater_than_or_equal_to(Term.new(variable), expression)
+    end
+
+    def greater_than_or_equal_to(term : Term, expression : Expression)
+      greater_than_or_equal_to(Expression.new(term), expression)
+    end
+
     def greater_than_or_equal_to(term : Term, variable : Variable)
       greater_than_or_equal_to(Expression.new(term), variable)
     end
@@ -38,6 +46,14 @@ module Kiwi
 
     def greater_than_or_equal_to(expression : Expression, term : Term)
       greater_than_or_equal_to(expression, Expression.new(term))
+    end
+
+    def less_than_or_equal_to(variable : Variable, expression : Expression)
+      less_than_or_equal_to(Term.new(variable), expression)
+    end
+
+    def less_than_or_equal_to(term : Term, expression : Expression)
+      less_than_or_equal_to(Expression.new(term), expression)
     end
 
     def less_than_or_equal_to(first : Variable, second : Variable)
