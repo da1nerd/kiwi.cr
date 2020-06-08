@@ -5,7 +5,7 @@ require "./variable.cr"
 require "./row.cr"
 require "./symbol.cr"
 require "./util.cr"
-require "./exceptions.cr"
+require "./exception"
 
 module Kiwi
   class Solver

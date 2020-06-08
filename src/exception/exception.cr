@@ -1,5 +1,5 @@
 require "./kiwi_exception.cr"
-require "./constraint.cr"
+require "../constraint.cr"
 
 module Kiwi
   class InternalSolverError < Exception
