@@ -60,6 +60,18 @@ module Kiwi
       less_than_or_equal_to(Term.new(first), second)
     end
 
+    def less_than_or_equal_to(variable : Variable, constant : Float64)
+      less_than_or_equal_to(Term.new(variable), constant)
+    end
+
+    def less_than_or_equal_to(term : Term, constant : Float64)
+      less_than_or_equal_to(Expression.new(term), constant)
+    end
+
+    def less_than_or_equal_to(expression : Expression, constant : Float64)
+      less_than_or_equal_to(expression, Expression.new(constant))
+    end
+
     def less_than_or_equal_to(term : Term, variable : Variable)
       less_than_or_equal_to(Expression.new(term), variable)
     end
