@@ -43,6 +43,29 @@ module Kiwi
       @terms.size == 0
     end
 
+    # Adds the *other* `Expression` to this one and returns a new expression.
+    def +(other : Expression) : Expression
+      terms = [] of Term
+      @terms.each { |t| terms << t }
+      other.terms.each { |t| terms << t }
+      Expression.new(terms, @constant + other.constant)
+    end
+
+    # Multiplies this expression with a *coefficient* and returns a new `Expression`.
+    def *(coefficient : Float64) : Expression
+      terms = [] of Term
+
+      @terms.each do |term|
+        terms << term * coefficient
+      end
+      Expression.new(terms, @constant * coefficient)
+    end
+
+    # Subtracts the *other* `Expression` from this one and returns a new `Expression`
+    def -(other : Expression) : Expression
+      self + (other * -1)
+    end
+
     def to_s(io)
       io << "isConstant: " << is_constant << " constant: " << constant
       if !is_constant

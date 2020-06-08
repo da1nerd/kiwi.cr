@@ -21,35 +21,7 @@ module Kiwi
     end
 
     def less_than_or_equal_to(first : Expression, second : Expression) : Constraint
-      Constraint.new(subtract(first, second), RelationalOperator::OP_LE)
-    end
-
-    def subtract(first : Expression, second : Expression) : Expression
-      add(first, negate(second))
-    end
-
-    def negate(expression : Expression) : Expression
-      multiply(expression, -1.0)
-    end
-
-    def multiply(expression : Expression, coefficient : Float64) : Expression
-      terms = [] of Term
-
-      expression.terms.each do |term|
-        terms << multiply(term, coefficient)
-      end
-      Expression.new(terms, expression.constant * coefficient)
-    end
-
-    def multiply(term : Term, coefficient : Float64) : Term
-      Term.new(term.variable, term.coefficient * coefficient)
-    end
-
-    def add(first : Expression, second : Expression) : Expression
-      terms = [] of Term
-      first.terms.each { |t| terms << t }
-      second.terms.each { |t| terms << t }
-      Expression.new(terms, first.constant + second.constant)
+      Constraint.new(first - second, RelationalOperator::OP_LE)
     end
 
     def equals(variable : Variable, constant : Float64)
@@ -65,7 +37,7 @@ module Kiwi
     end
 
     def equals(first : Expression, second : Expression) : Constraint
-      Constraint.new(subtract(first, second), RelationalOperator::OP_EQ)
+      Constraint.new(first - second, RelationalOperator::OP_EQ)
     end
   end
 end

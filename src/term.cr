@@ -18,6 +18,11 @@ module Kiwi
       @coefficient * @variable.value
     end
 
+    # Multiplies this term with a *coefficient* and returns a new `Term`
+    def *(coefficient : Float64) : Term
+      Term.new(@variable, @coefficient * coefficient)
+    end
+
     def to_s(io)
       io << "variable: (" << @variable << ") coefficient: " << @coefficient
     end
