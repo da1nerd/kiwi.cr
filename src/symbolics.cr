@@ -24,6 +24,14 @@ module Kiwi
       Constraint.new(first - second, RelationalOperator::OP_GE)
     end
 
+    def greater_than_or_equal_to(constant : Float64, variable : Variable)
+      greater_than_or_equal_to(constant, Term.new(variable))
+    end
+
+    def greater_than_or_equal_to(constant : Float64, term : Term)
+      greater_than_or_equal_to(Expression.new(constant), term)
+    end
+
     def greater_than_or_equal_to(first : Variable, second : Variable)
       greater_than_or_equal_to(Term.new(first), second)
     end
