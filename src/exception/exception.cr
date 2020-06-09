@@ -12,7 +12,7 @@ module Kiwi
     end
   end
 
-  class DuplicateEditVariableException < KiwiException
+  class DuplicateEditVariableStateException < KiwiException
   end
 
   class InternalSolverError < Exception
@@ -31,7 +31,7 @@ module Kiwi
     end
   end
 
-  class UnknownEditVariableException < Exception
+  class UnknownEditVariableStateException < Exception
   end
 
   class UnsatisfiableConstraintException < KiwiException

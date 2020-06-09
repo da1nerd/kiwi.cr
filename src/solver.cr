@@ -1,7 +1,7 @@
 require "./tag.cr"
 require "./edit_info.cr"
 require "./constraint.cr"
-require "./variable.cr"
+require "./variable_state.cr"
 require "./row.cr"
 require "./symbol.cr"
 require "./util.cr"
@@ -11,8 +11,8 @@ module Kiwi
   class Solver
     @cns : Hash(Constraint, Tag)
     @rows : Hash(Symbol, Row)
-    @vars : Hash(Variable, Symbol)
-    @edits : Hash(Variable, EditInfo)
+    @vars : Hash(VariableState, Symbol)
+    @edits : Hash(VariableState, EditInfo)
     @infeasible_rows : Array(Symbol)
     @objective : Row
     @artificial : Row | Nil
@@ -20,8 +20,8 @@ module Kiwi
     def initialize
       @cns = {} of Constraint => Tag
       @rows = {} of Symbol => Row
-      @vars = {} of Variable => Symbol
-      @edits = {} of Variable => EditInfo
+      @vars = {} of VariableState => Symbol
+      @edits = {} of VariableState => EditInfo
       @infeasible_rows = [] of Symbol
       @objective = Row.new
     end
@@ -155,9 +155,9 @@ module Kiwi
     end
 
     @[Raises]
-    def add_edit_variable(variable : Variable, strength : Float64)
+    def add_edit_variable(variable : VariableState, strength : Float64)
       if @edits.has_key? variable
-        raise DuplicateEditVariableException.new
+        raise DuplicateEditVariableStateException.new
       end
 
       strength = Strength.clip(strength)
@@ -180,9 +180,9 @@ module Kiwi
     end
 
     @[Raises]
-    def remove_edit_variable(variable : Variable)
+    def remove_edit_variable(variable : VariableState)
       if !@edits.has_key?(variable)
-        raise UnknownEditVariableException.new
+        raise UnknownEditVariableStateException.new
       end
 
       begin
@@ -194,14 +194,14 @@ module Kiwi
       @edits.delete variable
     end
 
-    def has_edit_variable(variable : Variable) : Bool
+    def has_edit_variable(variable : VariableState) : Bool
       @edits.has_key? variable
     end
 
     @[Raises]
-    def suggest_value(variable : Variable, value : Float64)
+    def suggest_value(variable : VariableState, value : Float64)
       if !@edits.has_key?(variable)
-        raise UnknownEditVariableException.new
+        raise UnknownEditVariableStateException.new
       end
       info = @edits[variable]
       delta = value - info.constant
@@ -483,7 +483,7 @@ module Kiwi
       return row
     end
 
-    private def get_var_symbol(variable : Variable) : Symbol
+    private def get_var_symbol(variable : VariableState) : Symbol
       if @vars.has_key?(variable)
         return @vars[variable]
       else

@@ -1,7 +1,7 @@
 require "./expression.cr"
 require "./relational_operator.cr"
 require "./term.cr"
-require "./variable.cr"
+require "./variable_state.cr"
 require "./strength.cr"
 
 module Kiwi
@@ -31,7 +31,7 @@ module Kiwi
     end
 
     private def reduce(expression : Expression) : Expression
-      vars = {} of Variable => Float64
+      vars = {} of VariableState => Float64
       expression.terms.each do |term|
         value = 0.0
         if vars.has_key? term.variable

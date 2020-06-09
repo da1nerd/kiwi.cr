@@ -1,7 +1,7 @@
 require "./term.cr"
 require "./relational_operator.cr"
 require "./constraint.cr"
-require "./variable.cr"
+require "./variable_state.cr"
 
 module Kiwi
   class Expression
@@ -81,7 +81,7 @@ module Kiwi
     end
 
     def ==(variable : Variable) : Constraint
-      self == Term.new(variable)
+      self == Term.new(variable.state)
     end
 
     def ==(constant : Number) : Constraint

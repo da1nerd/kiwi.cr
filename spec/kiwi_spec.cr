@@ -24,7 +24,7 @@ describe Kiwi do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")
     y = Kiwi::Variable.new("y")
-    solver.add_constraint(Kiwi::Symbolics.equals(x, y))
+    solver.add_constraint(x == y)
     solver.update_variables
     x.value.should be_close(y.value, EPSILON)
   end

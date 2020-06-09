@@ -1,6 +1,7 @@
 require "./solver.cr"
-require "./variable.cr"
+require "./variable_state.cr"
 require "./symbolics.cr"
+require "./dsl"
 
 # TODO: Write documentation for `Kiwi::Crystal`
 module Kiwi

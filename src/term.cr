@@ -1,19 +1,20 @@
-require "./variable.cr"
+require "./variable_state.cr"
+require "./dsl/variable.cr"
 require "./expression.cr"
 require "./constraint.cr"
 
 module Kiwi
   class Term
-    @variable : Variable
+    @variable : VariableState
     @coefficient : Float64
 
     property variable, coefficient
 
-    def initialize(@variable : Variable, coefficient : Number)
+    def initialize(@variable : VariableState, coefficient : Number)
       @coefficient = coefficient.to_f64
     end
 
-    def initialize(variable : Variable)
+    def initialize(variable : VariableState)
       initialize(variable, 1.0)
     end
 

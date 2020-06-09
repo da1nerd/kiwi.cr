@@ -1,5 +1,5 @@
 require "./expression.cr"
-require "./variable.cr"
+require "./dsl/variable.cr"
 require "./term.cr"
 require "./constraint.cr"
 require "./relational_operator.cr"
@@ -9,7 +9,7 @@ module Kiwi
     extend self
 
     def greater_than_or_equal_to(variable : Variable, constant : Float64)
-      greater_than_or_equal_to(Term.new(variable), constant)
+      greater_than_or_equal_to(Term.new(variable.state), constant)
     end
 
     def greater_than_or_equal_to(term : Term, constant : Float64)
@@ -25,7 +25,7 @@ module Kiwi
     end
 
     def greater_than_or_equal_to(constant : Float64, variable : Variable)
-      greater_than_or_equal_to(constant, Term.new(variable))
+      greater_than_or_equal_to(constant, Term.new(variable.state))
     end
 
     def greater_than_or_equal_to(constant : Float64, term : Term)
@@ -33,11 +33,11 @@ module Kiwi
     end
 
     def greater_than_or_equal_to(first : Variable, second : Variable)
-      greater_than_or_equal_to(Term.new(first), second)
+      greater_than_or_equal_to(Term.new(first.state), second)
     end
 
     def greater_than_or_equal_to(variable : Variable, expression : Expression)
-      greater_than_or_equal_to(Term.new(variable), expression)
+      greater_than_or_equal_to(Term.new(variable.state), expression)
     end
 
     def greater_than_or_equal_to(term : Term, expression : Expression)
@@ -49,7 +49,7 @@ module Kiwi
     end
 
     def greater_than_or_equal_to(expression : Expression, variable : Variable)
-      greater_than_or_equal_to(expression, Term.new(variable))
+      greater_than_or_equal_to(expression, Term.new(variable.state))
     end
 
     def greater_than_or_equal_to(expression : Expression, term : Term)
@@ -57,7 +57,7 @@ module Kiwi
     end
 
     def less_than_or_equal_to(variable : Variable, expression : Expression)
-      less_than_or_equal_to(Term.new(variable), expression)
+      less_than_or_equal_to(Term.new(variable.state), expression)
     end
 
     def less_than_or_equal_to(term : Term, expression : Expression)
@@ -65,11 +65,11 @@ module Kiwi
     end
 
     def less_than_or_equal_to(first : Variable, second : Variable)
-      less_than_or_equal_to(Term.new(first), second)
+      less_than_or_equal_to(Term.new(first.state), second)
     end
 
     def less_than_or_equal_to(variable : Variable, constant : Float64)
-      less_than_or_equal_to(Term.new(variable), constant)
+      less_than_or_equal_to(Term.new(variable.state), constant)
     end
 
     def less_than_or_equal_to(term : Term, constant : Float64)
@@ -85,7 +85,7 @@ module Kiwi
     end
 
     def less_than_or_equal_to(expression : Expression, variable : Variable)
-      less_than_or_equal_to(expression, Term.new(variable))
+      less_than_or_equal_to(expression, Term.new(variable.state))
     end
 
     def less_than_or_equal_to(expression : Expression, term : Term)
@@ -93,7 +93,7 @@ module Kiwi
     end
 
     def less_than_or_equal_to(constant : Float64, variable : Variable)
-      less_than_or_equal_to(constant, Term.new(variable))
+      less_than_or_equal_to(constant, Term.new(variable.state))
     end
 
     def less_than_or_equal_to(constant : Float64, term : Term)
@@ -109,7 +109,7 @@ module Kiwi
     end
 
     def equals(first : Variable, second : Variable)
-      Term.new(first) == second
+      Term.new(first.state) == second.state
     end
   end
 end
