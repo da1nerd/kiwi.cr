@@ -4,7 +4,7 @@ describe Kiwi do
   it "checks that a variable is less than or equal to a value" do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")
-    solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(Kiwi::Expression.new(100), x))
+    solver.add_constraint(Kiwi::Expression.new(100) <= x)
     solver.update_variables
     (100 <= x.value).should be_truthy
     solver.add_constraint(x == 110)
@@ -15,7 +15,7 @@ describe Kiwi do
   it "is unable to satisfy a less than or equal to constraint" do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")
-    solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(Kiwi::Expression.new(100), x))
+    solver.add_constraint(Kiwi::Expression.new(100) <= x)
     solver.update_variables
     (x.value <= 100).should be_truthy
 

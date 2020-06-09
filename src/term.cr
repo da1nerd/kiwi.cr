@@ -51,6 +51,18 @@ module Kiwi
       Expression.new(self) >= constant
     end
 
+    def <=(variable : Variable) : Constraint
+      Expression.new(self) <= variable
+    end
+
+    def <=(constant : Number) : Constraint
+      Expression.new(self) <= constant
+    end
+
+    def <=(expression : Expression) : Constraint
+      Expression.new(self) <= expression
+    end
+
     def to_s(io)
       io << "variable: (" << @variable << ") coefficient: " << @coefficient
     end

@@ -34,7 +34,7 @@ describe Kiwi do
     x = Kiwi::Variable.new("x")
     y = Kiwi::Variable.new("y")
 
-    solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(x, y))
+    solver.add_constraint(x <= y)
     solver.add_constraint(y == x + 3)
     tmpx = x == 10
     tmpx.strength = Kiwi::Strength::WEAK
@@ -57,14 +57,14 @@ describe Kiwi do
     x = Kiwi::Variable.new("x")
     solver = Kiwi::Solver.new
 
-    tmpx = Kiwi::Symbolics.less_than_or_equal_to(x, 100)
+    tmpx = x <= 100
     tmpx.strength = Kiwi::Strength::WEAK
     solver.add_constraint(tmpx)
     solver.update_variables
     x.value.should be_close(100, EPSILON)
 
-    c10 = Kiwi::Symbolics.less_than_or_equal_to(x, 10)
-    c20 = Kiwi::Symbolics.less_than_or_equal_to(x, 20)
+    c10 = x <= 10
+    c20 = x <= 20
     solver.add_constraint(c10)
     solver.add_constraint(c20)
     solver.update_variables
@@ -78,7 +78,7 @@ describe Kiwi do
     solver.update_variables
     x.value.should be_close(100, EPSILON)
 
-    c10again = Kiwi::Symbolics.less_than_or_equal_to(x, 10)
+    c10again = x <= 10
     solver.add_constraint(c10again)
     solver.add_constraint(c10)
     solver.update_variables
@@ -101,8 +101,8 @@ describe Kiwi do
     solver.add_constraint((x == 100).strength = Kiwi::Strength::WEAK)
     solver.add_constraint((y == 120).strength = Kiwi::Strength::STRONG)
 
-    c10 = Kiwi::Symbolics.less_than_or_equal_to(x, 10)
-    c20 = Kiwi::Symbolics.less_than_or_equal_to(x, 20)
+    c10 = x <= 10
+    c20 = x <= 20
 
     solver.add_constraint(c10)
     solver.add_constraint(c20)
@@ -156,7 +156,7 @@ describe Kiwi do
     solver.add_constraint(x >= 10.0)
 
     expect_raises(Kiwi::UnsatisfiableConstraintException) do
-      solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(x, 5.0))
+      solver.add_constraint(x <= 5.0)
       solver.update_variables
     end
   end
@@ -175,7 +175,7 @@ describe Kiwi do
     solver.add_constraint(z >= 8.0)
 
     expect_raises(Kiwi::UnsatisfiableConstraintException) do
-      solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(z, 4))
+      solver.add_constraint(z <= 4)
       solver.update_variables
     end
   end

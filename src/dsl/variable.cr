@@ -50,5 +50,17 @@ module Kiwi
     def >=(expression : Expression) : Constraint
       Term.new(@state) >= expression
     end
+
+    def <=(constant : Number) : Constraint
+      Term.new(@state) <= constant
+    end
+
+    def <=(other : Variable) : Constraint
+      Term.new(@state) <= other
+    end
+
+    def <=(expression : Expression) : Constraint
+      Term.new(@state) <= expression
+    end
   end
 end
