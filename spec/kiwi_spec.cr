@@ -153,7 +153,7 @@ describe Kiwi do
     x = Kiwi::Variable.new("x")
     solver = Kiwi::Solver.new
 
-    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(x, 10.0))
+    solver.add_constraint(x >= 10.0)
 
     expect_raises(Kiwi::UnsatisfiableConstraintException) do
       solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(x, 5.0))
@@ -168,11 +168,11 @@ describe Kiwi do
     z = Kiwi::Variable.new("z")
     solver = Kiwi::Solver.new
 
-    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(w, 10.0))
-    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(x, w))
-    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(y, x))
-    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(z, y))
-    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(z, 8.0))
+    solver.add_constraint(w >= 10.0)
+    solver.add_constraint(x >= w)
+    solver.add_constraint(y >= x)
+    solver.add_constraint(z >= y)
+    solver.add_constraint(z >= 8.0)
 
     expect_raises(Kiwi::UnsatisfiableConstraintException) do
       solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(z, 4))

@@ -1,6 +1,7 @@
 require "../variable_state.cr"
 
 module Kiwi
+  # This is a light wrapper around the actual `VariableState` that provides some helpful operators.
   struct Variable
     @state : VariableState
 
@@ -36,6 +37,18 @@ module Kiwi
 
     def ==(other : Variable) : Constraint
       Term.new(@state) == other
+    end
+
+    def >=(constant : Number) : Constraint
+      Term.new(@state) >= constant
+    end
+
+    def >=(other : Variable) : Constraint
+      Term.new(@state) >= other
+    end
+
+    def >=(expression : Expression) : Constraint
+      Term.new(@state) >= expression
     end
   end
 end

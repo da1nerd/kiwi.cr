@@ -28,7 +28,7 @@ describe Kiwi do
   it "check that a variable is greater than or equal to a value" do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")
-    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(x, Kiwi::Expression.new(100)))
+    solver.add_constraint(x >= Kiwi::Expression.new(100))
     solver.update_variables
     (x.value >= 100).should be_truthy
     solver.add_constraint(x == 110)
@@ -39,7 +39,7 @@ describe Kiwi do
   it "is unable to satisfy a greater than or equal to constraint" do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")
-    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(x, Kiwi::Expression.new(100)))
+    solver.add_constraint(x >= Kiwi::Expression.new(100))
     solver.update_variables
     (x.value >= 100).should be_truthy
     expect_raises(Kiwi::UnsatisfiableConstraintException) do

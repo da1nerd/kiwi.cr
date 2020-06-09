@@ -88,6 +88,22 @@ module Kiwi
       self == Expression.new(constant)
     end
 
+    def >=(other : Expression) : Constraint
+      Constraint.new(self - other, RelationalOperator::OP_GE)
+    end
+
+    def >=(constant : Number) : Constraint
+      self >= Expression.new(constant)
+    end
+
+    def >=(term : Term) : Constraint
+      self >= Expression.new(term)
+    end
+
+    def >=(variable : Variable) : Constraint
+      self >= Term.new(variable.state)
+    end
+
     def to_s(io)
       io << "isConstant: " << is_constant << " constant: " << constant
       if !is_constant
