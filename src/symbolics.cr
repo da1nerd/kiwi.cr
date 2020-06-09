@@ -108,29 +108,8 @@ module Kiwi
       Constraint.new(first - second, RelationalOperator::OP_LE)
     end
 
-    def equals(variable : Variable, constant : Float64)
-      equals(Term.new(variable), constant)
-    end
-
-    def equals(term : Term, constant : Float64)
-      equals(Expression.new(term), constant)
-    end
-
-    # TODO: This has already been migrated into `Expression`
-    def equals(expression : Expression, constant : Float64)
-      expression == constant
-    end
-
     def equals(first : Variable, second : Variable)
-      equals(Term.new(first), second)
-    end
-
-    def equals(term : Term, variable : Variable)
-      Expression.new(term) == variable
-    end
-
-    def equals(variable : Variable, expression : Expression)
-      expression == variable
+      Term.new(first) == second
     end
   end
 end

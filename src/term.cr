@@ -1,5 +1,6 @@
 require "./variable.cr"
 require "./expression.cr"
+require "./constraint.cr"
 
 module Kiwi
   class Term
@@ -8,7 +9,8 @@ module Kiwi
 
     property variable, coefficient
 
-    def initialize(@variable : Variable, @coefficient : Float64)
+    def initialize(@variable : Variable, coefficient : Number)
+      @coefficient = coefficient.to_f64
     end
 
     def initialize(variable : Variable)
@@ -20,12 +22,20 @@ module Kiwi
     end
 
     # Multiplies this term with a *coefficient* and returns a new `Term`
-    def *(coefficient : Float64) : Term
+    def *(coefficient : Number) : Term
       Term.new(@variable, @coefficient * coefficient)
     end
 
-    def +(constant : Float64) : Expression
+    def +(constant : Number) : Expression
       Expression.new(self, constant)
+    end
+
+    def ==(constant : Number) : Constraint
+      Expression.new(self) == constant
+    end
+
+    def ==(variable : Variable) : Constraint
+      Expression.new(self) == variable
     end
 
     def to_s(io)

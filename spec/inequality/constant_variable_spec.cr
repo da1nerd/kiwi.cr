@@ -7,7 +7,7 @@ describe Kiwi do
     solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(100.0, x))
     solver.update_variables
     (100 <= x.value).should be_truthy
-    solver.add_constraint(Kiwi::Symbolics.equals(x, 110.0))
+    solver.add_constraint(x == 110.0)
     solver.update_variables
     x.value.should be_close(110.0, EPSILON)
   end
@@ -20,7 +20,7 @@ describe Kiwi do
     (x.value <= 100).should be_truthy
 
     expect_raises(Kiwi::UnsatisfiableConstraintException) do
-      solver.add_constraint(Kiwi::Symbolics.equals(x, 10))
+      solver.add_constraint(x == 10)
       solver.update_variables
     end
   end
@@ -31,7 +31,7 @@ describe Kiwi do
     solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(100.0, x))
     solver.update_variables
     (100 >= x.value).should be_truthy
-    solver.add_constraint(Kiwi::Symbolics.equals(x, 90.0))
+    solver.add_constraint(x == 90.0)
     solver.update_variables
     x.value.should be_close(90, EPSILON)
   end
@@ -43,7 +43,7 @@ describe Kiwi do
     solver.update_variables
     (100 >= x.value).should be_truthy
     expect_raises(Kiwi::UnsatisfiableConstraintException) do
-      solver.add_constraint(Kiwi::Symbolics.equals(x, 110))
+      solver.add_constraint(x == 110)
       solver.update_variables
     end
   end

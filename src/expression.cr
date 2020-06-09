@@ -18,7 +18,8 @@ module Kiwi
       initialize(term, 0.0)
     end
 
-    def initialize(@constant : Float64)
+    def initialize(constant : Number)
+      @constant = constant.to_f64
       @terms = [] of Term
     end
 
@@ -26,12 +27,14 @@ module Kiwi
       initialize(terms, 0.0)
     end
 
-    def initialize(term : Term, @constant : Float64)
+    def initialize(term : Term, constant : Number)
+      @constant = constant.to_f64
       @terms = [] of Term
       @terms << term
     end
 
-    def initialize(@terms : Array(Term), @constant : Float64)
+    def initialize(@terms : Array(Term), constant : Number)
+      @constant = constant.to_f64
     end
 
     def value : Float64
@@ -55,7 +58,7 @@ module Kiwi
     end
 
     # Multiplies this expression with a *coefficient* and returns a new `Expression`.
-    def *(coefficient : Float64) : Expression
+    def *(coefficient : Number) : Expression
       terms = [] of Term
 
       @terms.each do |term|
@@ -81,7 +84,7 @@ module Kiwi
       self == Term.new(variable)
     end
 
-    def ==(constant : Float64) : Constraint
+    def ==(constant : Number) : Constraint
       self == Expression.new(constant)
     end
 
