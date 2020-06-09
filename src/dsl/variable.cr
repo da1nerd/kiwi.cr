@@ -31,12 +31,12 @@ module Kiwi
       Term.new(@state) == constant
     end
 
-    def ==(expression : Expression) : Constraint
-      expression == self
-    end
-
     def ==(other : Variable) : Constraint
       Term.new(@state) == other
+    end
+
+    def ==(expression : Expression) : Constraint
+      expression == self
     end
 
     def >=(constant : Number) : Constraint

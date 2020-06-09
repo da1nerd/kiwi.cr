@@ -4,29 +4,43 @@ require "./term.cr"
 require "./constraint.cr"
 require "./relational_operator.cr"
 
-module Kiwi
-  # TODO: we can't support left-hand-side number operations in the overloaded operators.
-  module Symbolics
-    extend self
+# :nodoc:
+struct Number
+  # TODO: use a macro to generate all of these
 
-    def greater_than_or_equal_to(constant : Float64, variable : Variable)
-      greater_than_or_equal_to(constant, Term.new(variable.state))
-    end
+  def >=(variable : Kiwi::Variable) : Kiwi::Constraint
+    self >= Kiwi::Term.new(variable.state)
+  end
 
-    def greater_than_or_equal_to(constant : Float64, term : Term)
-      Expression.new(constant) >= term
-    end
+  def >=(term : Kiwi::Term) : Kiwi::Constraint
+    Kiwi::Expression.new(self) >= term
+  end
 
-    def less_than_or_equal_to(constant : Float64, variable : Variable)
-      less_than_or_equal_to(constant, Term.new(variable.state))
-    end
+  def >=(expression : Kiwi::Expression) : Kiwi::Constraint
+    Kiwi::Expression.new(self) >= expression
+  end
 
-    def less_than_or_equal_to(constant : Float64, term : Term)
-      less_than_or_equal_to(constant, Expression.new(term))
-    end
+  def <=(variable : Kiwi::Variable) : Kiwi::Constraint
+    self <= Kiwi::Term.new(variable.state)
+  end
 
-    def less_than_or_equal_to(constant : Float64, expression : Expression)
-      Expression.new(constant) <= expression
-    end
+  def <=(term : Kiwi::Term) : Kiwi::Constraint
+    self <= Kiwi::Expression.new(term)
+  end
+
+  def <=(expression : Kiwi::Expression) : Kiwi::Constraint
+    Kiwi::Expression.new(self) <= expression
+  end
+
+  def ==(variable : Kiwi::Variable) : Kiwi::Constraint
+    self == Kiwi::Term.new(variable.state)
+  end
+
+  def ==(term : Kiwi::Term) : Kiwi::Constraint
+    self == Kiwi::Expression.new(term)
+  end
+
+  def ==(expression : Kiwi::Expression) : Kiwi::Constraint
+    Kiwi::Expression.new(self) == expression
   end
 end
