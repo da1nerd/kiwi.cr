@@ -17,6 +17,14 @@ Benchmark.ips do |x|
     constraint_runner(30)
   end
 
+  x.report("add 60 constraints") do
+    constraint_runner(60)
+  end
+
+  x.report("add 300 constraints") do
+    constraint_runner(300)
+  end
+
   x.report("add 3000 constraints") do
     constraint_runner(3000)
   end
