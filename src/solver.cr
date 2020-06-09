@@ -65,7 +65,7 @@ module Kiwi
       end
 
       tag = @cns[constraint]
-      cns.delete constraint
+      @cns.delete constraint
       remove_constraint_effects(constraint, tag)
 
       if @rows.has_key? tag.marker
@@ -77,7 +77,7 @@ module Kiwi
           raise InternalSolverError.new("internal solver error")
         end
 
-        leaving : Symbol | Nil
+        leaving : Symbol? = nil
         @rows.each_key do |symbol|
           if @rows[symbol] == row
             leaving = symbol
@@ -88,8 +88,8 @@ module Kiwi
         end
 
         @rows.delete leaving
-        row.solve_for(leaving, tag.marker)
-        substitute(tag.marker, row)
+        row.as(Row).solve_for(leaving.as(Symbol), tag.marker)
+        substitute(tag.marker, row.as(Row))
       end
       optimize(@objective)
     end
@@ -114,9 +114,9 @@ module Kiwi
       r1 = Float64::MAX
       r2 = Float64::MAX
 
-      first : Row?
-      second : Row?
-      third : Row?
+      first : Row? = nil
+      second : Row? = nil
+      third : Row? = nil
 
       @rows.each_key do |symbol|
         candidate_row = @rows[symbol]
@@ -124,7 +124,7 @@ module Kiwi
         if c == 0
           next
         end
-        if s.type == Symbol::Type::EXTERNAL
+        if symbol.type == Symbol::Type::EXTERNAL
           third = candidate_row
         elsif c < 0
           r = -candidate_row.constant / c

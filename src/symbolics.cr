@@ -151,5 +151,9 @@ module Kiwi
     def add(term : Term, constant : Float64)
       Expression.new(term, constant)
     end
+
+    def multiply(variable : Variable, coefficient : Float64)
+      Term.new(variable, coefficient)
+    end
   end
 end

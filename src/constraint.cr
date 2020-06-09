@@ -10,7 +10,8 @@ module Kiwi
     @strength : Float64
     @op : RelationalOperator
 
-    property expression, strength, op
+    property expression, op
+    getter strength
 
     def initialize(expression : Expression, op : RelationalOperator)
       initialize(expression, op, Strength::REQUIRED)
@@ -23,6 +24,10 @@ module Kiwi
     def initialize(expression : Expression, @op : RelationalOperator, strength : Float64)
       @expression = reduce(expression)
       @strength = Strength.clip(strength)
+    end
+
+    def strength=(@strength : Float64)
+      self
     end
 
     private def reduce(expression : Expression) : Expression
