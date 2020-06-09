@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 describe Kiwi do
-  it "works" do
+  it "equality with lhs addition" do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")
     solver.add_constraint(x + 2 == 20)
@@ -9,7 +9,7 @@ describe Kiwi do
     x.value.should be_close(18, EPSILON)
   end
 
-  it "simple 0" do
+  it "equality with addition on both sides" do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")
     y = Kiwi::Variable.new("y")
