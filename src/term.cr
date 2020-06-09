@@ -4,7 +4,7 @@ require "./expression.cr"
 require "./constraint.cr"
 
 module Kiwi
-  class Term
+  struct Term
     @variable : VariableState
     @coefficient : Float64
 

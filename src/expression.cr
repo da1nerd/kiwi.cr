@@ -4,7 +4,7 @@ require "./constraint.cr"
 require "./variable_state.cr"
 
 module Kiwi
-  class Expression
+  struct Expression
     @terms : Array(Term)
     @constant : Float64
 
