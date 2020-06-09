@@ -1,3 +1,6 @@
+require "./term.cr"
+require "./expression.cr"
+
 module Kiwi
   class Variable
     @name : String
@@ -12,6 +15,14 @@ module Kiwi
 
     def initialize(@value : Float64)
       @name = ""
+    end
+
+    def *(coefficient : Float64) : Term
+      Term.new(self, coefficient)
+    end
+
+    def +(constant : Float64) : Expression
+      Term.new(self) + constant
     end
 
     def to_s(io)

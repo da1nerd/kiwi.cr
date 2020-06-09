@@ -1,4 +1,7 @@
 require "./term.cr"
+require "./relational_operator.cr"
+require "./constraint.cr"
+require "./variable.cr"
 
 module Kiwi
   class Expression
@@ -64,6 +67,22 @@ module Kiwi
     # Subtracts the *other* `Expression` from this one and returns a new `Expression`
     def -(other : Expression) : Expression
       self + (other * -1)
+    end
+
+    def ==(other : Expression) : Constraint
+      Constraint.new(self - other, RelationalOperator::OP_EQ)
+    end
+
+    def ==(term : Term) : Constraint
+      self == Expression.new(term)
+    end
+
+    def ==(variable : Variable) : Constraint
+      self == Term.new(variable)
+    end
+
+    def ==(constant : Float64) : Constraint
+      self == Expression.new(constant)
     end
 
     def to_s(io)

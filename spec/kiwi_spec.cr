@@ -4,7 +4,10 @@ describe Kiwi do
   it "works" do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")
-    solver.add_constraint(Kiwi::Symbolics.equals(Kiwi::Symbolics.add(x, 2), 20))
+    # TODO: this line raises Error: no overload matches 'Kiwi::Solver#add_constraint' with type Bool
+    solver.add_constraint(x + 2 == 20)
+    # TODO: however, this is the equivalent logic and it works fine.
+    # solver.add_constraint(Kiwi::Symbolics.equals(x + 2, 20))
     solver.update_variables
     x.value.should be_close(18, EPSILON)
   end
@@ -14,7 +17,7 @@ describe Kiwi do
     x = Kiwi::Variable.new("x")
     y = Kiwi::Variable.new("y")
     solver.add_constraint(Kiwi::Symbolics.equals(x, 20))
-    solver.add_constraint(Kiwi::Symbolics.equals(Kiwi::Symbolics.add(x, 2), Kiwi::Symbolics.add(y, 10)))
+    solver.add_constraint(x + 2 == y + 10)
     solver.update_variables
     y.value.should be_close(12, EPSILON)
     x.value.should be_close(20, EPSILON)
@@ -35,7 +38,7 @@ describe Kiwi do
     y = Kiwi::Variable.new("y")
 
     solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(x, y))
-    solver.add_constraint(Kiwi::Symbolics.equals(y, Kiwi::Symbolics.add(x, 3)))
+    solver.add_constraint(Kiwi::Symbolics.equals(y, x + 3))
     tmpx = Kiwi::Symbolics.equals(x, 10)
     tmpx.strength = Kiwi::Strength::WEAK
     solver.add_constraint(tmpx)
@@ -117,7 +120,7 @@ describe Kiwi do
     x.value.should be_close(20, EPSILON)
     y.value.should be_close(120, EPSILON)
 
-    cxy = Kiwi::Symbolics.equals(Kiwi::Symbolics.multiply(x, 2), y)
+    cxy = Kiwi::Symbolics.equals(x * 2, y)
     solver.add_constraint(cxy)
     solver.update_variables
 

@@ -116,8 +116,9 @@ module Kiwi
       equals(Expression.new(term), constant)
     end
 
+    # TODO: This has already been migrated into `Expression`
     def equals(expression : Expression, constant : Float64)
-      equals(expression, Expression.new(constant))
+      expression == constant
     end
 
     def equals(first : Variable, second : Variable)
@@ -125,35 +126,11 @@ module Kiwi
     end
 
     def equals(term : Term, variable : Variable)
-      equals(Expression.new(term), variable)
-    end
-
-    def equals(expression : Expression, variable : Variable)
-      equals(expression, Term.new(variable))
-    end
-
-    def equals(expression : Expression, term : Term)
-      equals(expression, Expression.new(term))
+      Expression.new(term) == variable
     end
 
     def equals(variable : Variable, expression : Expression)
-      equals(expression, variable)
-    end
-
-    def equals(first : Expression, second : Expression) : Constraint
-      Constraint.new(first - second, RelationalOperator::OP_EQ)
-    end
-
-    def add(variable : Variable, constant : Float64)
-      add(Term.new(variable), constant)
-    end
-
-    def add(term : Term, constant : Float64)
-      Expression.new(term, constant)
-    end
-
-    def multiply(variable : Variable, coefficient : Float64)
-      Term.new(variable, coefficient)
+      expression == variable
     end
   end
 end

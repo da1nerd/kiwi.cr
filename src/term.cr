@@ -1,4 +1,5 @@
 require "./variable.cr"
+require "./expression.cr"
 
 module Kiwi
   class Term
@@ -21,6 +22,10 @@ module Kiwi
     # Multiplies this term with a *coefficient* and returns a new `Term`
     def *(coefficient : Float64) : Term
       Term.new(@variable, @coefficient * coefficient)
+    end
+
+    def +(constant : Float64) : Expression
+      Expression.new(self, constant)
     end
 
     def to_s(io)
