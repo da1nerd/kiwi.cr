@@ -1,15 +1,23 @@
 require "../src/kiwi"
 require "benchmark"
 
-Benchmark.ips do |x|
+def constraint_runner(num)
   solver = Kiwi::Solver.new
   vars = [] of Kiwi::Variable
   vars << Kiwi::Variable.new("var0")
   solver.add_constraint(vars[0] == 100)
+  1.upto(num) do |i|
+    vars << Kiwi::Variable.new("var#{i}")
+    solver.add_constraint(vars[i] == 100 + vars[i - 1])
+  end
+end
+
+Benchmark.ips do |x|
+  x.report("add 30 constraints") do
+    constraint_runner(30)
+  end
+
   x.report("add 3000 constraints") do
-    1.upto(3000) do |i|
-      vars << Kiwi::Variable.new("var#{i}")
-      solver.add_constraint(vars[i] == 100 + vars[i - 1])
-    end
+    constraint_runner(3000)
   end
 end
