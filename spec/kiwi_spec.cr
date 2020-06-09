@@ -136,4 +136,47 @@ describe Kiwi do
     x.value.should be_close(100, EPSILON)
     y.value.should be_close(120, EPSILON)
   end
+
+  it "inconsistent 1" do
+    x = Kiwi::Variable.new("x")
+    solver = Kiwi::Solver.new
+
+    solver.add_constraint(Kiwi::Symbolics.equals(x, 10.0))
+
+    expect_raises(Kiwi::UnsatisfiableConstraintException) do
+      solver.add_constraint(Kiwi::Symbolics.equals(x, 5.0))
+      solver.update_variables
+    end
+  end
+
+  it "inconsistent 2" do
+    x = Kiwi::Variable.new("x")
+    solver = Kiwi::Solver.new
+
+    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(x, 10.0))
+
+    expect_raises(Kiwi::UnsatisfiableConstraintException) do
+      solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(x, 5.0))
+      solver.update_variables
+    end
+  end
+
+  it "inconsistent 3" do
+    w = Kiwi::Variable.new("w")
+    x = Kiwi::Variable.new("x")
+    y = Kiwi::Variable.new("y")
+    z = Kiwi::Variable.new("z")
+    solver = Kiwi::Solver.new
+
+    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(w, 10.0))
+    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(x, w))
+    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(y, x))
+    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(z, y))
+    solver.add_constraint(Kiwi::Symbolics.greater_than_or_equal_to(z, 8.0))
+
+    expect_raises(Kiwi::UnsatisfiableConstraintException) do
+      solver.add_constraint(Kiwi::Symbolics.less_than_or_equal_to(z, 4))
+      solver.update_variables
+    end
+  end
 end
