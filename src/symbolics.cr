@@ -43,4 +43,28 @@ struct Number
   def ==(expression : Kiwi::Expression) : Kiwi::Constraint
     Kiwi::Expression.new(self) == expression
   end
+
+  def +(variable : Kiwi::Variable) : Kiwi::Expression
+    self + Kiwi::Term.new(variable.state)
+  end
+
+  def +(term : Kiwi::Term) : Kiwi::Expression
+    self + Kiwi::Expression.new(term)
+  end
+
+  def +(expression : Kiwi::Expression) : Kiwi::Expression
+    Kiwi::Expression.new(self) + expression
+  end
+
+  def *(variable : Kiwi::Variable) : Kiwi::Expression
+    self * Kiwi::Term.new(variable.state)
+  end
+
+  def *(term : Kiwi::Term) : Kiwi::Expression
+    self * Kiwi::Expression.new(term)
+  end
+
+  def *(expression : Kiwi::Expression) : Kiwi::Expression
+    Kiwi::Expression.new(self) * expression
+  end
 end
