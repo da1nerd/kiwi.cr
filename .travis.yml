@@ -1,6 +1,12 @@
 language: crystal
+cache: shards
+crystal:
+  - latest
+  - nightly
 
-# Uncomment the following if you'd like Travis to run specs and check code formatting
-# script:
-#   - crystal spec
-#   - crystal tool format --check
+script:
+  - crystal spec --error-trace
+  - crystal tool format --check
+
+after_success:
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then crystal docs && netlify deploy --prod; fi

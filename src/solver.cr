@@ -26,7 +26,6 @@ module Kiwi
       @objective = Row.new
     end
 
-    @[Raises]
     def add_constraint(constraint : Constraint)
       if @cns.has_key? constraint
         raise DuplicateConstraintException.new(constraint)
@@ -58,7 +57,6 @@ module Kiwi
       optimize(@objective)
     end
 
-    @[Raises]
     def remove_constraint(constraint : Constraint)
       if !@cns.has_key?(constraint)
         raise UnknownConstraintException.new(constraint)
@@ -154,7 +152,6 @@ module Kiwi
       @cns.has_key?(constraint)
     end
 
-    @[Raises]
     def add_edit_variable(variable : VariableState, strength : Float64)
       if @edits.has_key? variable
         raise DuplicateEditVariableStateException.new
@@ -179,7 +176,6 @@ module Kiwi
       @edits[variable] = EditInfo.new(constraint, @cns[constraint], 0)
     end
 
-    @[Raises]
     def remove_edit_variable(variable : VariableState)
       if !@edits.has_key?(variable)
         raise UnknownEditVariableStateException.new
@@ -198,7 +194,6 @@ module Kiwi
       @edits.has_key? variable
     end
 
-    @[Raises]
     def suggest_value(variable : VariableState, value : Float64)
       if !@edits.has_key?(variable)
         raise UnknownEditVariableStateException.new
@@ -372,7 +367,6 @@ module Kiwi
       end
     end
 
-    @[Raises]
     def optimize(objective : Row)
       while true
         entering = get_entering_symbol(objective)
@@ -408,7 +402,6 @@ module Kiwi
       end
     end
 
-    @[Raises]
     def dual_optimize
       while !@infeasible_rows.empty?
         leaving : Symbol = @infeasible_rows.pop
