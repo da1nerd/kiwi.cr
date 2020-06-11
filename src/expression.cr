@@ -49,6 +49,10 @@ module Kiwi
       @terms.size == 0
     end
 
+    def +(constant : Float64)
+      self + Expression.new(constant)
+    end
+
     # Adds the *other* `Expression` to this one and returns a new expression.
     def +(other : Expression) : Expression
       terms = [] of Term

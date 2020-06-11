@@ -70,29 +70,16 @@ module Kiwi
         @rows.delete tag.marker
       else
         row = get_marker_leaving_row(tag.marker)
-
-        if row == nil
-          raise InternalSolverError.new("internal solver error")
-        end
-
-        leaving : Symbol? = nil
-        @rows.each_key do |symbol|
-          if @rows[symbol] == row
-            leaving = symbol
-          end
-        end
-        if leaving == nil
-          raise InternalSolverError.new("internal solver error")
-        end
+        leaving = get_row_symbol(row)
 
         @rows.delete leaving
-        row.as(Row).solve_for(leaving.as(Symbol), tag.marker)
-        substitute(tag.marker, row.as(Row))
+        row.solve_for(leaving, tag.marker)
+        substitute(tag.marker, row)
       end
       optimize(@objective)
     end
 
-    def remove_constraint_effects(constraint : Constraint, tag : Tag)
+    private def remove_constraint_effects(constraint : Constraint, tag : Tag)
       if tag.marker.type == Symbol::Type::ERROR
         remove_marker_effects(tag.marker, constraint.strength)
       elsif tag.other.type == Symbol::Type::ERROR
@@ -100,7 +87,7 @@ module Kiwi
       end
     end
 
-    def remove_marker_effects(marker : Symbol, strength : Float64)
+    private def remove_marker_effects(marker : Symbol, strength : Float64)
       if @rows.has_key? marker
         @objective.insert(@rows[marker], -strength)
       else
@@ -108,7 +95,7 @@ module Kiwi
       end
     end
 
-    def get_marker_leaving_row(marker : Symbol) : Row | Nil
+    private def get_marker_leaving_row(marker : Symbol) : Row
       r1 = Float64::MAX
       r2 = Float64::MAX
 
@@ -145,13 +132,19 @@ module Kiwi
       if result = second
         return result
       end
-      return third
+      if result = third
+        return result
+      end
+
+      raise InternalSolverError.new("internal solver error")
     end
 
+    # Checks if the constraint has already been added to the solver
     def has_constraint(constraint : Constraint) : Bool
       @cns.has_key?(constraint)
     end
 
+    # TODO: this does not appear to be used
     def add_edit_variable(variable : VariableState, strength : Float64)
       if @edits.has_key? variable
         raise DuplicateEditVariableStateException.new
@@ -176,6 +169,7 @@ module Kiwi
       @edits[variable] = EditInfo.new(constraint, @cns[constraint], 0)
     end
 
+    # TODO: this does not appear to be used
     def remove_edit_variable(variable : VariableState)
       if !@edits.has_key?(variable)
         raise UnknownEditVariableStateException.new
@@ -190,6 +184,7 @@ module Kiwi
       @edits.delete variable
     end
 
+    # TODO: this does not appear to be used
     def has_edit_variable(variable : VariableState) : Bool
       @edits.has_key? variable
     end
@@ -229,6 +224,7 @@ module Kiwi
       dual_optimize
     end
 
+    # Updates the values of the external solver variables
     def update_variables
       @vars.each do |variable, symbol|
         if !@rows.has_key?(symbol)
@@ -239,7 +235,8 @@ module Kiwi
       end
     end
 
-    def create_row(constraint : Constraint, tag : Tag) : Row
+    # Creates a `Row` object for the given constraint
+    private def create_row(constraint : Constraint, tag : Tag) : Row
       expression = constraint.expression
       row = Row.new(expression.constant)
 
@@ -290,7 +287,9 @@ module Kiwi
       return row
     end
 
-    def choose_subject(row : Row, tag : Tag) : Symbol
+    # Chooses the best subject for the solve target of the row.
+    # An invalid `Symbol` will be returned if there is no valid subject.
+    private def choose_subject(row : Row, tag : Tag) : Symbol
       row.cells.each do |symbol, value|
         if symbol.type == Symbol::Type::EXTERNAL
           return symbol
@@ -301,8 +300,7 @@ module Kiwi
           return tag.marker
         end
       end
-      # Can other be nil?
-      if tag.other && (tag.other.type == Symbol::Type::SLACK || tag.other.type == Symbol::Type::ERROR)
+      if tag.other.type == Symbol::Type::SLACK || tag.other.type == Symbol::Type::ERROR
         if row.coefficient_for(tag.other) < 0
           return tag.other
         end
@@ -311,15 +309,23 @@ module Kiwi
       Symbol.new
     end
 
-    def add_with_artificial_variable(row : Row) : Bool
+    # Adds the row to the table using an artificial variable.
+    # This will return false if the constraint cannot be satisfied
+    private def add_with_artificial_variable(row : Row) : Bool
+      # create and add the artificial variable to the table
       art = Symbol.new(Symbol::Type::SLACK)
       @rows[art] = Row.new(row)
 
       @artificial = Row.new(row)
 
+      # optimize the artificial objective. This is only successful
+      # if the artificial objective is optimized to zero.
       optimize(@artificial.as(Row))
       success = Util.near_zero(@artificial.as(Row).constant)
       @artificial = nil
+
+      # if the artificial variable is basic, pivot the row so that
+      # it becomes basic. If the row is constant, exit early.
 
       if @rows.has_key? art
         rowptr = @rows[art]
@@ -336,13 +342,14 @@ module Kiwi
 
         entering = any_pivotable_symbol(rowptr)
         if entering.type == Symbol::Type::INVALID
-          return false
+          return false # unsatisfiable (will this ever happen?)
         end
         rowptr.solve_for(art, entering)
         substitute(entering, rowptr)
         @rows[entering] = rowptr
       end
 
+      # remove the artificial variable from the table
       @rows.each_value do |value|
         value.remove(art)
       end
@@ -352,7 +359,8 @@ module Kiwi
       return success
     end
 
-    def substitute(symbol : Symbol, row : Row)
+    # Substitute the parametric symbol with the given row.
+    private def substitute(symbol : Symbol, row : Row)
       @rows.each do |key, value|
         value.substitute(symbol, row)
         if key.type != Symbol::Type::EXTERNAL && value.constant < 0
@@ -367,42 +375,29 @@ module Kiwi
       end
     end
 
-    def optimize(objective : Row)
+    # Optimize the system for the given objective function.
+    # This method performs iterations of Phase 2 of the simplex method
+    # until the objective function reaches a minimum
+    private def optimize(objective : Row)
       while true
-        entering = get_entering_symbol(objective)
+        entering : Symbol = get_entering_symbol(objective)
         if entering.type == Symbol::Type::INVALID
           return
         end
 
-        entry = get_leaving_row(entering)
-        if entry == nil
-          raise InternalSolverError.new("The objective is unbounded.")
-        end
-
-        leaving : Symbol? = nil
-        @rows.each_key do |key|
-          if @rows[key] == entry
-            leaving = key
-          end
-        end
-
-        # it appears the entry key will always be the same as the leaving key
-        entry_key : Symbol? = nil
-        @rows.each_key do |key|
-          if @rows[key] == entry
-            entry_key = key
-          end
-        end
+        entry : Row = get_leaving_row(entering)
+        # TODO: should leaving and entry_key be the same here?
+        leaving : Symbol = get_row_symbol(entry)
+        entry_key : Symbol = get_row_symbol(entry)
 
         @rows.delete entry_key
-        # TODO: this is a quick hack. And will likely break
-        entry.as(Row).solve_for(leaving.as(Symbol), entering)
-        substitute(entering.as(Symbol), entry.as(Row))
-        @rows[entering.as(Symbol)] = entry.as(Row)
+        entry.solve_for(leaving, entering)
+        substitute(entering, entry)
+        @rows[entering] = entry
       end
     end
 
-    def dual_optimize
+    private def dual_optimize
       while !@infeasible_rows.empty?
         leaving : Symbol = @infeasible_rows.pop
         if @rows.has_key?(leaving) && @rows[leaving].constant < 0
@@ -419,6 +414,7 @@ module Kiwi
       end
     end
 
+    # Compute the entering variable for a pivot operation.
     private def get_entering_symbol(objective : Row) : Symbol
       objective.cells.each do |symbol, value|
         if symbol.type != Symbol::Type::DUMMY && value < 0
@@ -447,17 +443,29 @@ module Kiwi
       return entering
     end
 
+    # Get the first slack or error `Symbol` in the *row*
     private def any_pivotable_symbol(row : Row) : Symbol
-      symbol = Symbol.new
-      row.cells.each do |s, value|
+      row.cells.each_key do |s|
         if s.type == Symbol::Type::SLACK || s.type == Symbol::Type::ERROR
-          symbol = s
+          return s
         end
       end
-      return symbol
+      Symbol.new
     end
 
-    private def get_leaving_row(entering : Symbol) : Row | Nil
+    # Returns the *row*'s `Symbol`.
+    # That is, the *row*'s key.
+    private def get_row_symbol(row : Row) : Symbol
+      @rows.each_key do |s|
+        if @rows[s] == row
+          return s
+        end
+      end
+      raise InternalSolverError.new("internal solver error")
+    end
+
+    # Compute the `Row` which holds the exit `Symbol` for a pivot
+    private def get_leaving_row(entering : Symbol) : Row
       ratio = Float64::MAX
       row : Row | Nil = nil
       @rows.each_key do |symbol|
@@ -473,9 +481,14 @@ module Kiwi
           end
         end
       end
-      return row
+      if result = row
+        return result
+      end
+      raise InternalSolverError.new("The objective is unbounded.")
     end
 
+    # Get the `Symbol` for the given *variable*
+    # If a `Symbol` does not exist for the *variable*, one will be created.
     private def get_var_symbol(variable : VariableState) : Symbol
       if @vars.has_key?(variable)
         return @vars[variable]
@@ -486,6 +499,7 @@ module Kiwi
       end
     end
 
+    # Test whether a *row* is composed of all dummy `Variable`'s
     private def all_dummies(row : Row) : Bool
       row.cells.each_key do |symbol|
         if symbol.type != Symbol::Type::DUMMY
