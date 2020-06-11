@@ -9,6 +9,7 @@ require "./exception"
 
 module Kiwi
   include KiwiException
+
   class Solver
     @cns : Hash(Constraint, Tag)
     @rows : Hash(Symbol, Row)
