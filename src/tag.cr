@@ -2,6 +2,7 @@ require "./symbol.cr"
 
 module Kiwi
   class Solver
+    # :nodoc:
     private class Tag
       @marker : Symbol
       @other : Symbol

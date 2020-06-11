@@ -1,6 +1,7 @@
 require "./symbol.cr"
 
 module Kiwi
+  # :nodoc:
   class Row
     @constant : Float64
     @cells : Hash(Symbol, Float64)

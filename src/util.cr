@@ -1,4 +1,5 @@
 module Kiwi
+  # :nodoc:
   module Util
     extend self
 

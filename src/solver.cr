@@ -26,6 +26,15 @@ module Kiwi
       @objective = Row.new
     end
 
+    # Adds a constraint to the system.
+    #
+    # ##Example
+    #
+    # ```
+    # solver = Kiwi::Solver.new
+    # x = Kiwi::Variable.new("x")
+    # solver.add_constraint(x + 2 == 4)
+    # ```
     def add_constraint(constraint : Constraint)
       if @cns.has_key? constraint
         raise DuplicateConstraintException.new(constraint)
@@ -57,6 +66,17 @@ module Kiwi
       optimize(@objective)
     end
 
+    # Removes a constraint from the system
+    #
+    # ## Example
+    #
+    # ```
+    # solver = Kiwi::Solver.new
+    # x = Kiwi::Variable.new("x")
+    # constraint = x + 2 == 4
+    # solver.add_constraint(constraint)
+    # solver.remove_constraint(constraint)
+    # ```
     def remove_constraint(constraint : Constraint)
       if !@cns.has_key?(constraint)
         raise UnknownConstraintException.new(constraint)
@@ -139,14 +159,24 @@ module Kiwi
       raise InternalSolverError.new("internal solver error")
     end
 
-    # Checks if the constraint has already been added to the solver
+    # Checks if the constraint has already been added to the solver.
+    #
+    # ## Example
+    #
+    # ```
+    # solver = Kiwi::Solver.new
+    # x = Kiwi::Variable.new("x")
+    # constraint = x + 2 == 4
+    # solver.add_constraint(constraint)
+    # solver.has_constraint(constraint) # => true
+    # ```
     def has_constraint(constraint : Constraint) : Bool
       @cns.has_key?(constraint)
     end
 
-    # TODO: this does not appear to be used
-    def add_edit_variable(variable : VariableState, strength : Float64)
-      if @edits.has_key? variable
+    # TODO: What's this for?
+    def add_edit_variable(variable : Variable, strength : Float64)
+      if @edits.has_key? variable.state
         raise DuplicateEditVariableStateException.new
       end
 
@@ -157,7 +187,7 @@ module Kiwi
       end
 
       terms = [] of Term
-      terms << Term.new(variable)
+      terms << Term.new(variable.state)
       constraint = Constraint.new(Expression.new(terms), RelationalOperator::OP_EQ, strength)
 
       begin
@@ -166,34 +196,35 @@ module Kiwi
         puts ex.message
       end
 
-      @edits[variable] = EditInfo.new(constraint, @cns[constraint], 0)
+      @edits[variable.state] = EditInfo.new(constraint, @cns[constraint], 0)
     end
 
-    # TODO: this does not appear to be used
-    def remove_edit_variable(variable : VariableState)
-      if !@edits.has_key?(variable)
+    # TODO: What's this for?
+    def remove_edit_variable(variable : Variable)
+      if !@edits.has_key?(variable.state)
         raise UnknownEditVariableStateException.new
       end
 
       begin
-        remove_constraint(@edits[variable].constraint)
+        remove_constraint(@edits[variable.state].constraint)
       rescue ex
         puts ex.message
       end
 
-      @edits.delete variable
+      @edits.delete variable.state
     end
 
-    # TODO: this does not appear to be used
-    def has_edit_variable(variable : VariableState) : Bool
-      @edits.has_key? variable
+    # TODO: What's this for?
+    def has_edit_variable(variable : Variable) : Bool
+      @edits.has_key? variable.state
     end
 
-    def suggest_value(variable : VariableState, value : Float64)
-      if !@edits.has_key?(variable)
+    # Suggests the value of a variable
+    def suggest_value(variable : Variable, value : Float64)
+      if !@edits.has_key?(variable.state)
         raise UnknownEditVariableStateException.new
       end
-      info = @edits[variable]
+      info = @edits[variable.state]
       delta = value - info.constant
       info.constant = value
 
@@ -225,6 +256,16 @@ module Kiwi
     end
 
     # Updates the values of the external solver variables
+    #
+    # ## Example
+    #
+    # ```
+    # solver = Kiwi::Solver.new
+    # x = Kiwi::Variable.new("x")
+    # solver.add_constraint(x + 2 == 4)
+    # solver.update_variables
+    # x.value # => 2
+    # ```
     def update_variables
       @vars.each do |variable, symbol|
         if !@rows.has_key?(symbol)

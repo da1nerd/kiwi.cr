@@ -5,6 +5,7 @@ module Kiwi
   struct Variable
     @state : VariableState
 
+    # :nodoc:
     getter state
 
     def initialize(name : String)

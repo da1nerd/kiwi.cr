@@ -4,6 +4,7 @@ require "./constraint.cr"
 require "./variable_state.cr"
 
 module Kiwi
+  # :nodoc:
   struct Expression
     @terms : Array(Term)
     @constant : Float64

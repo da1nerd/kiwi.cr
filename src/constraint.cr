@@ -5,6 +5,7 @@ require "./variable_state.cr"
 require "./strength.cr"
 
 module Kiwi
+  # :nodoc:
   class Constraint
     @expression : Expression
     @strength : Float64

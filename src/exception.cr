@@ -1,30 +1,29 @@
-require "./kiwi_exception.cr"
-require "../constraint.cr"
+require "./constraint.cr"
 
-module Kiwi
+module Kiwi::KiwiException
   class InternalSolverError < Exception
   end
 
-  class DuplicateConstraintException < KiwiException
+  class DuplicateConstraintException < Exception
     @constraint : Constraint
 
     def initialize(@constraint : Constraint)
     end
   end
 
-  class DuplicateEditVariableStateException < KiwiException
+  class DuplicateEditVariableStateException < Exception
   end
 
   class InternalSolverError < Exception
   end
 
-  class NonLinearExpressionException < KiwiException
+  class NonLinearExpressionException < Exception
   end
 
-  class RequiredFailureException < KiwiException
+  class RequiredFailureException < Exception
   end
 
-  class UnknownConstraintException < KiwiException
+  class UnknownConstraintException < Exception
     @constraint : Constraint
 
     def initialize(@constraint : Constraint)
@@ -34,7 +33,7 @@ module Kiwi
   class UnknownEditVariableStateException < Exception
   end
 
-  class UnsatisfiableConstraintException < KiwiException
+  class UnsatisfiableConstraintException < Exception
     @constraint : Constraint
 
     def initialize(@constraint : Constraint)

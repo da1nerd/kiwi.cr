@@ -3,6 +3,7 @@ require "./expression.cr"
 require "./constraint.cr"
 
 module Kiwi
+  # :nodoc:
   class VariableState
     @name : String
     @value : Float64

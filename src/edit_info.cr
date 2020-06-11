@@ -3,6 +3,7 @@ require "./constraint.cr"
 
 module Kiwi
   class Solver
+    # :nodoc:
     private struct EditInfo
       @tag : Tag
       @constraint : Constraint

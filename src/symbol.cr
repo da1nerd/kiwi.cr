@@ -1,4 +1,5 @@
 module Kiwi
+  # :nodoc:
   class Symbol
     enum Type
       INVALID

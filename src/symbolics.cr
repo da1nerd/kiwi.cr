@@ -6,8 +6,6 @@ require "./relational_operator.cr"
 
 # :nodoc:
 struct Number
-  # TODO: use a macro to generate all of these
-
   def >=(variable : Kiwi::Variable)
     self >= Kiwi::Term.new(variable.state)
   end
