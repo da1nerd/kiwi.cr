@@ -5,23 +5,26 @@ require "./variable_state.cr"
 require "./strength.cr"
 
 module Kiwi
-  # :nodoc:
   class Constraint
     @expression : Expression
     @strength : Float64
     @op : RelationalOperator
 
+    # :nodoc:
     property expression, op
     getter strength
 
+    # :nodoc:
     def initialize(expression : Expression, op : RelationalOperator)
       initialize(expression, op, Strength::REQUIRED)
     end
 
+    # :nodoc:
     def initialize(other : Constraint, strength : Float64)
       initialize(other.expression, other.op, strength)
     end
 
+    # :nodoc:
     def initialize(expression : Expression, @op : RelationalOperator, strength : Float64)
       @expression = reduce(expression)
       @strength = Strength.clip(strength)
