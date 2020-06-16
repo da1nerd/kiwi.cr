@@ -11,6 +11,10 @@ module Kiwi
     property value : Float64
     getter name
 
+    def initialize
+      initialize("unnamed")
+    end
+
     def initialize(@name : String)
       @value = 0.0
     end
