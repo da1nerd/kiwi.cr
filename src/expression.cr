@@ -54,6 +54,10 @@ module Kiwi
       self + Expression.new(constant)
     end
 
+    def +(term : Term) : Expression
+      self + Expression.new(term)
+    end
+
     # Adds the *other* `Expression` to this one and returns a new expression.
     def +(other : Expression) : Expression
       terms = [] of Term

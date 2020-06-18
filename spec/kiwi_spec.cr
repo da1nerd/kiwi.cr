@@ -20,6 +20,20 @@ describe Kiwi do
     x.value.should be_close(20, EPSILON)
   end
 
+  it "variable plus term" do
+    solver = Kiwi::Solver.new
+    x = Kiwi::Variable.new("x")
+    y = Kiwi::Variable.new("y")
+    z = Kiwi::Variable.new("z")
+    solver.add_constraint(x == 22)
+    solver.add_constraint(y == 2)
+    solver.add_constraint(x == y + z * 10)
+    solver.update_variables
+    x.value.should be_close(22, EPSILON)
+    y.value.should be_close(2, EPSILON)
+    z.value.should be_close(2, EPSILON)
+  end
+
   it "simple 1" do
     solver = Kiwi::Solver.new
     x = Kiwi::Variable.new("x")

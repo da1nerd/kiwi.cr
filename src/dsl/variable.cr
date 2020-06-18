@@ -28,6 +28,10 @@ module Kiwi
       Term.new(@state) + constant
     end
 
+    def +(term : Term) : Expression
+      Term.new(@state) + term
+    end
+
     def ==(constant : Number) : Constraint
       Term.new(@state) == constant
     end
