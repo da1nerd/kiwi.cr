@@ -36,12 +36,24 @@ module Kiwi
       Expression.new(self) + term
     end
 
+    def -(variable : Variable) : Expression
+      Expression.new(self) - variable
+    end
+
     def ==(constant : Number) : Constraint
       Expression.new(self) == constant
     end
 
     def ==(variable : Variable) : Constraint
       Expression.new(self) == variable
+    end
+
+    def ==(term : Term) : Constraint
+      Expression.new(self) == term
+    end
+
+    def ==(expression : Expression) : Constraint
+      Expression.new(self) == expression
     end
 
     def >=(variable : Variable) : Constraint

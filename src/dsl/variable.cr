@@ -28,6 +28,14 @@ module Kiwi
       Term.new(@state) + constant
     end
 
+    def -(constant : Number) : Expression
+      Term.new(@state) - constant
+    end
+
+    def - (variable : Variable) : Expression
+      Term.new(@state) - variable
+    end
+
     def +(term : Term) : Expression
       Term.new(@state) + term
     end
@@ -38,6 +46,10 @@ module Kiwi
 
     def ==(other : Variable) : Constraint
       Term.new(@state) == other
+    end
+
+    def ==(term : Term) : Constraint
+      Term.new(@state) == term
     end
 
     def ==(expression : Expression) : Constraint

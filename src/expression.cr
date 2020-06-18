@@ -81,6 +81,14 @@ module Kiwi
       self + (other * -1)
     end
 
+    def -(variable : Variable) : Expression
+      self - Term.new(variable.state)
+    end
+
+    def -(term : Term) : Expression
+      self - Expression.new(term)
+    end
+
     def ==(other : Expression) : Constraint
       Constraint.new(self - other, RelationalOperator::OP_EQ)
     end
