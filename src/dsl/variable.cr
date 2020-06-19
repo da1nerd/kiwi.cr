@@ -16,6 +16,14 @@ module Kiwi
       @state = VariableState.new(value)
     end
 
+    def name : String
+      @state.name
+    end
+
+    def name=(name : String)
+      @state.name = name
+    end
+
     def value
       @state.value
     end

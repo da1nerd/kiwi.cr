@@ -9,7 +9,7 @@ module Kiwi
     @value : Float64
 
     property value : Float64
-    getter name
+    property name
 
     def initialize
       initialize("unnamed")

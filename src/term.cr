@@ -40,6 +40,10 @@ module Kiwi
       Expression.new(self) - variable
     end
 
+    def -(term : Term) : Expression
+      Expression.new(self) - term
+    end
+
     def ==(constant : Number) : Constraint
       Expression.new(self) == constant
     end
