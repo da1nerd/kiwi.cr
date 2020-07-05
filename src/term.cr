@@ -80,6 +80,10 @@ module Kiwi
       Expression.new(self) <= constant
     end
 
+    def <=(other : Term) : Constraint
+      Expression.new(self) <= other
+    end
+
     def <=(expression : Expression) : Constraint
       Expression.new(self) <= expression
     end
