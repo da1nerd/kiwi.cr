@@ -48,49 +48,23 @@ module Kiwi
       Expression.new(self) - term
     end
 
-    def ==(constant : Number) : Constraint
-      Expression.new(self) == constant
-    end
+    {% for op in ["<=", ">=", "=="] %}
+      def {{op.id}}(variable : Variable) : Constraint
+        Expression.new(self) {{op.id}} variable
+      end
 
-    def ==(variable : Variable) : Constraint
-      Expression.new(self) == variable
-    end
+      def {{op.id}}(constant : Number) : Constraint
+        Expression.new(self) {{op.id}} constant
+      end
 
-    def ==(term : Term) : Constraint
-      Expression.new(self) == term
-    end
+      def {{op.id}}(other : Term) : Constraint
+        Expression.new(self) {{op.id}} other
+      end
 
-    def ==(expression : Expression) : Constraint
-      Expression.new(self) == expression
-    end
-
-    def >=(variable : Variable) : Constraint
-      Expression.new(self) >= variable
-    end
-
-    def >=(expression : Expression) : Constraint
-      Expression.new(self) >= expression
-    end
-
-    def >=(constant : Number) : Constraint
-      Expression.new(self) >= constant
-    end
-
-    def <=(variable : Variable) : Constraint
-      Expression.new(self) <= variable
-    end
-
-    def <=(constant : Number) : Constraint
-      Expression.new(self) <= constant
-    end
-
-    def <=(other : Term) : Constraint
-      Expression.new(self) <= other
-    end
-
-    def <=(expression : Expression) : Constraint
-      Expression.new(self) <= expression
-    end
+      def {{op.id}}(expression : Expression) : Constraint
+        Expression.new(self) {{op.id}} expression
+      end
+    {% end %}
 
     def to_s(io)
       io << "variable: (" << @variable << ") coefficient: " << @coefficient

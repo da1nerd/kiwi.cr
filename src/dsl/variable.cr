@@ -32,72 +32,40 @@ module Kiwi
       Term.new(@state, coefficient)
     end
 
-    def +(constant : Number) : Expression
-      Term.new(@state) + constant
-    end
+    {% for op in ["+", "-"] %}
+      def {{op.id}}(constant : Number) : Expression
+        Term.new(@state) {{op.id}} constant
+      end
 
-    def -(constant : Number) : Expression
-      Term.new(@state) - constant
-    end
+      def {{op.id}}(other : Variable) : Expression
+        Term.new(@state) {{op.id}} other
+      end
 
-    def -(variable : Variable) : Expression
-      Term.new(@state) - variable
-    end
+      def {{op.id}}(term : Term) : Expression
+        Term.new(@state) {{op.id}} term
+      end
 
-    def -(term : Term) : Expression
-      Term.new(@state) - term
-    end
+      def {{op.id}}(expression : Expression) : Expression
+        Term.new(@state) {{op.id}} expression
+      end
+    {% end %}
 
-    def +(variable : Variable) : Expression
-      Term.new(@state) + variable
-    end
+    {% for op in ["<=", ">=", "=="] %}
+      def {{op.id}}(constant : Number) : Constraint
+        Term.new(@state) {{op.id}} constant
+      end
 
-    def +(term : Term) : Expression
-      Term.new(@state) + term
-    end
+      def {{op.id}}(other : Variable) : Constraint
+        Term.new(@state) {{op.id}} other
+      end
 
-    def ==(constant : Number) : Constraint
-      Term.new(@state) == constant
-    end
+      def {{op.id}}(term : Term) : Constraint
+        Term.new(@state) {{op.id}} term
+      end
 
-    def ==(other : Variable) : Constraint
-      Term.new(@state) == other
-    end
-
-    def ==(term : Term) : Constraint
-      Term.new(@state) == term
-    end
-
-    def ==(expression : Expression) : Constraint
-      expression == self
-    end
-
-    def >=(constant : Number) : Constraint
-      Term.new(@state) >= constant
-    end
-
-    def >=(other : Variable) : Constraint
-      Term.new(@state) >= other
-    end
-
-    def >=(expression : Expression) : Constraint
-      Term.new(@state) >= expression
-    end
-
-    def <=(constant : Number) : Constraint
-      Term.new(@state) <= constant
-    end
-
-    def <=(other : Variable) : Constraint
-      Term.new(@state) <= other
-    end
-
-    def <=(term : Term) : Constraint
-      Term.new(@state) <= term
-    end
-
-    def <=(expression : Expression) : Constraint
-      Term.new(@state) <= expression
-    end
+      def {{op.id}}(expression : Expression) : Constraint
+        Term.new(@state) {{op.id}} expression
+      end
+    {% end %}
   end
 end
