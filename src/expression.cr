@@ -85,6 +85,10 @@ module Kiwi
       self - Term.new(variable.state)
     end
 
+    def +(variable : Variable) : Expression
+      self + Term.new(variable.state)
+    end
+
     def -(term : Term) : Expression
       self - Expression.new(term)
     end

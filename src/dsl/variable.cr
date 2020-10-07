@@ -48,6 +48,10 @@ module Kiwi
       Term.new(@state) - term
     end
 
+    def +(variable : Variable) : Expression
+      Term.new(@state) + variable
+    end
+
     def +(term : Term) : Expression
       Term.new(@state) + term
     end

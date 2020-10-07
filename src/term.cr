@@ -36,6 +36,10 @@ module Kiwi
       Expression.new(self) + term
     end
 
+    def +(variable : Variable) : Expression
+      Expression.new(self) + variable
+    end
+
     def -(variable : Variable) : Expression
       Expression.new(self) - variable
     end
