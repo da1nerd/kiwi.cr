@@ -24,7 +24,7 @@ module Kiwi
     end
 
     def to_s(io)
-      io << "name: " << @name << " value: " << @value
+      io << "var " << @name << " = " << @value
     end
   end
 end

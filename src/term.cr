@@ -67,7 +67,7 @@ module Kiwi
     {% end %}
 
     def to_s(io)
-      io << "variable: (" << @variable << ") coefficient: " << @coefficient
+      io << @variable << "~coeff:" << @coefficient
     end
   end
 end

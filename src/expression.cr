@@ -50,7 +50,7 @@ module Kiwi
       @terms.size == 0
     end
 
-    def +(constant : Float64)
+    def +(constant : Float64) : Expression
       self + Expression.new(constant)
     end
 
