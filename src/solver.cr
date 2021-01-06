@@ -222,6 +222,7 @@ module Kiwi
     end
 
     # Suggests the value of a variable
+    # This raises an exception if the variable has not been defined as an editable variable.
     def suggest_value(variable : Variable, value : Float64)
       if !@edits.has_key?(variable.state)
         raise UnknownEditVariableStateException.new
