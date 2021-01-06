@@ -231,6 +231,7 @@ module Kiwi
       info.constant = value
 
       if @rows.has_key?(info.tag.marker)
+        row = @rows[info.tag.marker]
         if row.add(-delta) < 0
           @infeasible_rows << info.tag.marker
         end
@@ -239,6 +240,7 @@ module Kiwi
       end
 
       if @rows.has_key?(info.tag.other)
+        row = @rows[info.tag.other]
         if row.add(delta) < 0
           @infeasible_rows << info.tag.other
         end
@@ -474,7 +476,7 @@ module Kiwi
         if symbol.type != Symbol::Type::DUMMY
           current_cell = row.cells[symbol]
           if current_cell > 0
-            coefficient = objective.coefficient_for(symbol)
+            coefficient = @objective.coefficient_for(symbol)
             r = coefficient / current_cell
             if r < ratio
               ratio = r

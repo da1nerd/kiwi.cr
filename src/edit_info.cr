@@ -9,6 +9,9 @@ module Kiwi
       @constraint : Constraint
       @constant : Float64
 
+      property constant
+      getter tag
+
       def initialize(@constraint : Constraint, @tag : Tag, @constant : Float64)
       end
     end
