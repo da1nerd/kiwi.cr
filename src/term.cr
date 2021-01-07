@@ -40,6 +40,10 @@ module Kiwi
       Expression.new(self) + variable
     end
 
+    def -(constant : Number) : Expression
+      Expression.new(self, -constant)
+    end
+
     def -(variable : Variable) : Expression
       Expression.new(self) - variable
     end
