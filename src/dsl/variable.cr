@@ -32,6 +32,10 @@ module Kiwi
       Term.new(@state, coefficient)
     end
 
+    def /(denominator : Number) : Term
+      self * (1 / denominator)
+    end
+
     {% for op in ["+", "-"] %}
       def {{op.id}}(constant : Number) : Expression
         Term.new(@state) {{op.id}} constant

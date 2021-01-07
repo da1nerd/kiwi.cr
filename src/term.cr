@@ -28,6 +28,10 @@ module Kiwi
       Term.new(@variable, @coefficient * coefficient)
     end
 
+    def /(denominator : Number) : Term
+      self * (1 / denominator)
+    end
+
     def +(constant : Number) : Expression
       Expression.new(self, constant)
     end

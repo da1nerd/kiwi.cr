@@ -76,6 +76,10 @@ module Kiwi
       Expression.new(terms, @constant * coefficient)
     end
 
+    def /(denominator : Number) : Expression
+      self * (1 / denominator)
+    end
+
     # Subtracts the *other* `Expression` from this one and returns a new `Expression`
     def -(other : Expression) : Expression
       self + (other * -1)
