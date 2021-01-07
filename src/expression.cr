@@ -5,7 +5,7 @@ require "./variable_state.cr"
 
 module Kiwi
   # :nodoc:
-  struct Expression
+  class Expression
     @terms : Array(Term)
     @constant : Float64
 

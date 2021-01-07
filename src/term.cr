@@ -5,7 +5,7 @@ require "./constraint.cr"
 
 module Kiwi
   # :nodoc:
-  struct Term
+  class Term
     @variable : VariableState
     @coefficient : Float64
 

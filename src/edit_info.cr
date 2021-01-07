@@ -4,7 +4,7 @@ require "./constraint.cr"
 module Kiwi
   class Solver
     # :nodoc:
-    private struct EditInfo
+    private class EditInfo
       @tag : Tag
       @constraint : Constraint
       @constant : Float64
