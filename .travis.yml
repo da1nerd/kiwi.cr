@@ -8,10 +8,14 @@ script:
   - crystal spec --error-trace
   - crystal tool format --check
 
+after_success:
+  - crystal docs
+
 deploy:
   provider: netlify
   site: a4b14d9b-3d21-4568-8787-d69bf12a8f40
   dir: docs
   prod: true
+  edge: true
   on:
     branch: master
