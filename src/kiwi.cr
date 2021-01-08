@@ -27,5 +27,5 @@ require "./dsl"
 # x.value # => 20
 # ```
 module Kiwi
-  VERSION = "0.2.1"
+  VERSION = "0.3.0"
 end

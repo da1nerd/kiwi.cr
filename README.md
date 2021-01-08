@@ -1,6 +1,6 @@
 # Kiwi
-[![GitHub release](https://img.shields.io/github/release/neutrinog/kiwi-crystal.svg)](https://github.com/neutrinog/kiwi-crystal/releases)
-[![Build Status](https://travis-ci.org/neutrinog/kiwi-crystal.svg?branch=master)](https://travis-ci.org/neutrinog/kiwi-crystal)
+[![GitHub release](https://img.shields.io/github/release/neutrinog/kiwi.cr.svg)](https://github.com/neutrinog/kiwi.cr/releases)
+[![Build Status](https://travis-ci.org/neutrinog/kiwi.cr.svg?branch=master)](https://travis-ci.org/neutrinog/kiwi.cr)
 
 A Crystal port of the [Java implementation](https://github.com/alexbirkett/kiwi-java) of the Cassowary constraint solving algorithm
 
@@ -13,7 +13,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   kiwi:
-    github: neutrinog/kiwi-crystal
+    github: neutrinog/kiwi.cr
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ crystal run --release spec/benchmark.cr
 
 ## Contributing
 
-1. Fork it (<https://github.com/neutrinog/kiwi-crystal/fork>)
+1. Fork it (<https://github.com/neutrinog/kiwi.cr/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

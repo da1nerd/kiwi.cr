@@ -1,5 +1,5 @@
 name: kiwi
-version: 0.2.1
+version: 0.3.0
 
 description: |
   A Crystal port of the Cassowary constraint solving algorithm
@@ -8,6 +8,6 @@ description: |
 authors:
   - Joel <joel@neutrinographics.com>
 
-crystal: 0.35.0
+crystal: 0.35.1
 
 license: MIT
