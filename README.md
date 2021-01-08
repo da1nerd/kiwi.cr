@@ -1,6 +1,6 @@
 # Kiwi
 [![GitHub release](https://img.shields.io/github/release/da1nerd/kiwi.cr.svg)](https://github.com/da1nerd/kiwi.cr/releases)
-[![Build Status](https://travis-ci.org/da1nerd/kiwi.cr.svg?branch=master)](https://travis-ci.org/da1nerd/kiwi.cr)
+[![Build Status](https://travis-ci.com/da1nerd/kiwi.cr.svg?branch=master)](https://travis-ci.com/da1nerd/kiwi.cr)
 
 A Crystal port of the [Java implementation](https://github.com/alexbirkett/kiwi-java) of the Cassowary constraint solving algorithm
 
