@@ -9,8 +9,9 @@ script:
   - crystal tool format --check
 
 deploy:
-  branch: master
   provider: netlify
   site: a4b14d9b-3d21-4568-8787-d69bf12a8f40
   dir: docs
   prod: true
+  on:
+    branch: master
