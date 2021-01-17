@@ -44,4 +44,4 @@ crystal run --release spec/benchmark.cr
 
 ## Contributors
 
-- [da1nerd](https://github.com/da1nerd) - creator, maintainer
+- [Joel](https://github.com/da1nerd) - creator, maintainer
