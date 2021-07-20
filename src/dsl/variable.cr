@@ -2,7 +2,7 @@ require "../variable_state.cr"
 
 module Kiwi
   # This is a light wrapper around the actual `VariableState` that provides some helpful operators.
-  class Variable
+  struct Variable
     @state : VariableState
 
     # :nodoc:
