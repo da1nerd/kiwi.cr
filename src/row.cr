@@ -26,8 +26,8 @@ module Kiwi
     end
 
     def insert(symbol : Symbol, coefficient : Float64)
-      if @cells.has_key? symbol
-        coefficient += @cells[symbol]
+      if cell_value = @cells[symbol]?
+        coefficient += cell_value
       end
 
       if Util.near_zero(coefficient)
@@ -43,18 +43,19 @@ module Kiwi
 
     def insert(other : Row, coefficient : Float64)
       @constant += other.constant * coefficient
-
-      other.cells.each_key do |symbol|
-        coeff = other.cells[symbol] * coefficient
+      
+      other.cells.each do |symbol, other_value|
+        coeff = other_value * coefficient
         # TODO: the below lines could be made more efficient
         value = 0.0
-        if @cells.has_key? symbol
-          value = @cells[symbol]
+        if this_value = @cells[symbol]?
+          value = this_value
         end
         temp = value + coeff
-        @cells[symbol] = temp
         if Util.near_zero(temp)
-          @cells.delete(symbol)
+          @cells.delete symbol
+        else
+          @cells[symbol] = temp
         end
       end
     end
@@ -70,18 +71,17 @@ module Kiwi
     def reverse_sign
       @constant = -@constant
 
-      @cells.each do |symbol, value|
-        @cells[symbol] = -value
+      @cells.transform_values! do |value|
+        -value
       end
     end
 
     def solve_for(symbol : Symbol)
-      coeff = -1.0 / @cells[symbol]
-      @cells.delete symbol
+      coeff = -1.0 / @cells.delete(symbol).not_nil!
       @constant *= coeff
 
-      @cells.each do |s, value|
-        @cells[s] = value * coeff
+      @cells.transform_values! do |value|
+        value * coeff
       end
     end
 
@@ -91,17 +91,15 @@ module Kiwi
     end
 
     def coefficient_for(symbol : Symbol) : Float64
-      if @cells.has_key? symbol
-        return @cells[symbol]
+      if result = @cells[symbol]?
+        return result
       else
         return 0.0
       end
     end
 
     def substitute(symbol : Symbol, row : Row)
-      if @cells.has_key? symbol
-        coefficient = @cells[symbol]
-        @cells.delete symbol
+      if coefficient = @cells.delete symbol
         insert(row, coefficient)
       end
     end
